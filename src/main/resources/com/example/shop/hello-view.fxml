@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="340.0" prefWidth="540.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.shop.HelloController">
+   <children>
+      <Label layoutX="195.0" layoutY="42.0" prefHeight="35.0" prefWidth="149.0" text="Authorisation">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Button fx:id="AuthorisationPageRegistrationButton" layoutX="446.0" layoutY="14.0" mnemonicParsing="false" text="Registration" />
+      <Button fx:id="AuthorisationPageEnterButton" layoutX="217.0" layoutY="255.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="106.0" text="Enter" />
+      <TextField fx:id="AuthorisationPageLoginField" layoutX="195.0" layoutY="124.0" />
+      <PasswordField fx:id="AuthorisationPagePasswordField" layoutX="195.0" layoutY="181.0" />
+      <Label layoutX="154.0" layoutY="128.0" prefHeight="17.0" prefWidth="34.0" text="Login" textAlignment="CENTER" />
+      <Label layoutX="138.0" layoutY="185.0" text="Password" />
+   </children>
+</AnchorPane>
