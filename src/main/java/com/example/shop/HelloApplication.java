@@ -9,11 +9,17 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+
 import static com.example.shop.DataBaseConnector.getDataFromOrders;
 
 public class HelloApplication extends Application {
+
+
     @Override
     public void start(Stage stage) throws IOException, SQLException, ParseException {
+
+
+
         System.out.println("Тест " + getDataFromOrders(2));
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 400);
@@ -23,9 +29,8 @@ public class HelloApplication extends Application {
 
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException {
         launch();
-
 
 
     }

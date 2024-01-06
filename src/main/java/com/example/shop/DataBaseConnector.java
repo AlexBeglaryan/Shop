@@ -1,5 +1,6 @@
 package com.example.shop;
 
+import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,7 +15,7 @@ public class DataBaseConnector {
     }
 
     public static Connection connectionToDb() throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/shop";
+        String url = "jdbc:mysql://localhost:3306/shoptest";
         String username = "root";
         String password = "12345-As";
 
@@ -311,10 +312,174 @@ public class DataBaseConnector {
         return dt.format(date);
     }
 
+
+    public static void usersTableDeploy() throws IOException, SQLException {
+
+        Connection conn = DataBaseConnector.connectionToDb();
+        Statement stmt = conn.createStatement();
+
+        String tableExists = "DROP TABLE IF EXISTS user;";
+        String createTable = "CREATE TABLE `user` (\n" +
+                "  `id` int NOT NULL AUTO_INCREMENT,\n" +
+                "  `login` varchar(45) DEFAULT NULL,\n" +
+                "  `password` varchar(45) DEFAULT NULL,\n" +
+                "  `role` varchar(45) DEFAULT NULL,\n" +
+                "  `name` varchar(45) DEFAULT NULL,\n" +
+                "  PRIMARY KEY (`id`)\n" +
+                ")";
+
+        String lockTable = "LOCK TABLES `user` WRITE;";
+        String tableUpdate = "INSERT INTO `user` VALUES (1,'Петр','12345','Администратор','Петр'),\n" +
+                "(2,'Сергей','12345','Пользователь','Сергей'),\n" +
+                "(3,'Мадина','12345','Пользователь','Мадина'),\n" +
+                "(4,'Роман','12345','Пользователь','Роман');";
+        String unlockTable = "UNLOCK TABLES;";
+
+
+        stmt.executeUpdate(tableExists);
+        stmt.executeUpdate(createTable);
+        stmt.executeUpdate(lockTable);
+        stmt.executeUpdate(tableUpdate);
+        stmt.executeUpdate(unlockTable);
+
+
+        System.out.println("Развертывание таблицы users завершено");
+    }
+
+    public static void productsTableDeploy() throws IOException, SQLException {
+
+        Connection conn = DataBaseConnector.connectionToDb();
+        Statement stmt = conn.createStatement();
+
+        String tableExists = "DROP TABLE IF EXISTS products;";
+        String createTable = "CREATE TABLE `products` (\n" +
+                "  `id` int NOT NULL AUTO_INCREMENT,\n" +
+                "  `name` varchar(45) NOT NULL,\n" +
+                "  `count` int NOT NULL,\n" +
+                "  `price` decimal(10,2) NOT NULL,\n" +
+                "  `category` varchar(45) NOT NULL,\n" +
+                "  `image` varchar(45) DEFAULT NULL,\n" +
+                "  PRIMARY KEY (`id`)\n" +
+                ")";
+
+        String lockTable = "LOCK TABLES products WRITE;";
+        String tableUpdate = "INSERT INTO `products` VALUES (1,'iPhone 15',46,120.20,'MOBILE_PHONE',NULL),\n" +
+                "(2,'Xiaomi MI PAD 5',50,35000.00,'TABLET',NULL),\n" +
+                "(3,'Pixel 8 Pro',48,135.50,'MOBILE_PHONE',NULL),\n" +
+                "(4,'Pixel 7 Pro',46,75000.20,'MOBILE_PHONE',NULL),\n" +
+                "(5,'Nokia 3310',47,15000.30,'MOBILE_PHONE',NULL),\n" +
+                "(6,'Vertu Constelation',48,650000.50,'MOBILE_PHONE',NULL),\n" +
+                "(7,'Galaxy Tab 6',46,45000.50,'TABLET',NULL),\n" +
+                "(8,'HyperPC 1',45,320000.20,'PC',NULL);";
+        String unlockTable = "UNLOCK TABLES;";
+
+
+        stmt.executeUpdate(tableExists);
+        stmt.executeUpdate(createTable);
+        stmt.executeUpdate(lockTable);
+        stmt.executeUpdate(tableUpdate);
+        stmt.executeUpdate(unlockTable);
+
+
+        System.out.println("Развертывание таблицы products завершено");
+    }
+
+    public static void ordersTableDeploy() throws IOException, SQLException {
+
+        Connection conn = DataBaseConnector.connectionToDb();
+        Statement stmt = conn.createStatement();
+
+        String tableExists = "DROP TABLE IF EXISTS orders;";
+        String createTable = "CREATE TABLE `orders` (\n" +
+                "  `orderid` int NOT NULL AUTO_INCREMENT,\n" +
+                "  `purchasedate` datetime DEFAULT NULL,\n" +
+                "  PRIMARY KEY (`orderid`)\n" +
+                ")";
+
+        String lockTable = "LOCK TABLES orders WRITE;";
+        String tableUpdate = "INSERT INTO `orders` VALUES (19,'2023-11-28 00:00:00'),\n" +
+                "(20,'2023-12-01 00:00:00'),\n" +
+                "(21,'2023-12-01 00:00:00'),\n" +
+                "(22,'2023-12-01 00:00:00'),\n" +
+                "(23,'2023-12-10 00:00:00');";
+        String unlockTable = "UNLOCK TABLES;";
+
+
+        stmt.executeUpdate(tableExists);
+        stmt.executeUpdate(createTable);
+        stmt.executeUpdate(lockTable);
+        stmt.executeUpdate(tableUpdate);
+        stmt.executeUpdate(unlockTable);
+
+
+        System.out.println("Развертывание таблицы orders завершено");
+    }
+
+    public static void purchasesTableDeploy() throws IOException, SQLException {
+
+        Connection conn = DataBaseConnector.connectionToDb();
+        Statement stmt = conn.createStatement();
+
+        String tableExists = "DROP TABLE IF EXISTS purchases;";
+        String createTable = "CREATE TABLE `purchases` (\n" +
+                "  `clientid` int NOT NULL,\n" +
+                "  `productid` int NOT NULL,\n" +
+                "  `count` int DEFAULT '0',\n" +
+                "  KEY `product_idx` (`productid`),\n" +
+                "  KEY `client_idx` (`clientid`),\n" +
+                "  CONSTRAINT `client` FOREIGN KEY (`clientid`) REFERENCES `user` (`id`),\n" +
+                "  CONSTRAINT `product` FOREIGN KEY (`productid`) REFERENCES `products` (`id`)\n" +
+                ")";
+
+
+        stmt.executeUpdate(tableExists);
+        stmt.executeUpdate(createTable);
+
+        System.out.println("Развертывание таблицы purchases завершено");
+    }
+
+    public static void purchaseHistoryTableDeploy() throws IOException, SQLException {
+
+        Connection conn = DataBaseConnector.connectionToDb();
+        Statement stmt = conn.createStatement();
+
+        String tableExists = "DROP TABLE IF EXISTS purchasehistory;";
+        String createTable = "CREATE TABLE `purchasehistory` (\n" +
+                "  `id` int NOT NULL AUTO_INCREMENT,\n" +
+                "  `clientid` int DEFAULT NULL,\n" +
+                "  `productid` int DEFAULT NULL,\n" +
+                "  `count` int DEFAULT NULL,\n" +
+                "  `orderid` int DEFAULT NULL,\n" +
+                "  PRIMARY KEY (`id`),\n" +
+                "  KEY `orders_idx` (`orderid`),\n" +
+                "  KEY `products_idx` (`productid`),\n" +
+                "  CONSTRAINT `orders` FOREIGN KEY (`orderid`) REFERENCES `orders` (`orderid`),\n" +
+                "  CONSTRAINT `products` FOREIGN KEY (`productid`) REFERENCES `products` (`id`)\n" +
+                ")";
+
+        String lockTable = "LOCK TABLES purchasehistory WRITE;";
+
+        String tableUpdate = "INSERT INTO `purchasehistory` VALUES (30,2,8,1,19),\n" +
+                "(31,2,1,1,19),\n" +
+                "(32,2,7,1,20),\n" +
+                "(33,2,4,1,20),\n" +
+                "(34,2,5,1,21),\n" +
+                "(35,2,5,1,22),\n" +
+                "(36,2,6,1,22),\n" +
+                "(37,4,8,1,23),\n" +
+                "(38,4,7,1,23);";
+        String unlockTable = "UNLOCK TABLES;";
+
+        stmt.executeUpdate(tableExists);
+        stmt.executeUpdate(createTable);
+        stmt.executeUpdate(lockTable);
+        stmt.executeUpdate(tableUpdate);
+        stmt.executeUpdate(unlockTable);
+
+        System.out.println("Развертывание таблицы purchasehistory завершено");
+    }
+
 }
-
-
-
 
 
 
